@@ -3,12 +3,18 @@ import express from 'express';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import mongoUri from './config';
+import './models/user.models';
+import userRouter from './routes/user.routes';
 
 const app = express();
-
 const port = process.env.PORT || 4000;
 
 app.use(logger('dev'));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use('/api/v1', userRouter);
 
 mongoose.Promise = Promise;
 mongoose.connect(mongoUri, {
