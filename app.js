@@ -2,7 +2,7 @@
 import express from 'express';
 import logger from 'morgan';
 import mongoose from 'mongoose';
-import mongoUri from './config';
+import config from './config';
 import './models/user.models';
 import userRouter from './routes/user.routes';
 
@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/v1', userRouter);
 
 mongoose.Promise = Promise;
-mongoose.connect(mongoUri, {
+mongoose.connect(config.mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
