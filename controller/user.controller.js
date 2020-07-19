@@ -11,11 +11,9 @@ const createUser = async (req, res) => {
   try {
     const savedUser = await User.findOne({ email });
     if (savedUser) {
-      return res
-        .status(422)
-        .json({
-          error: `User with ${savedUser.email} already exist, please login`,
-        });
+      return res.status(422).json({
+        error: `User with ${savedUser.email} already exist, please login`,
+      });
     }
     const hashpassword = await bcrypt.hash(password, 12);
     const user = new User({
@@ -24,7 +22,9 @@ const createUser = async (req, res) => {
       password: hashpassword,
     });
     await user.save();
-    res.json({ message: `${user.email} account successfully created` });
+    return res
+      .status(201)
+      .json({ message: `${user.email} account successfully created` });
   } catch (error) {
     console.log(error);
   }
@@ -43,8 +43,9 @@ const loginUser = async (req, res) => {
     if (comparePassword) {
       // return res.status(200).json({ message: `${userExist.email} successfully signed in` });
       const token = jwt.sign({ _id: userExist._id }, config.jwt_secret);
-      res.json({
-        token
+      return res.status(200).json({
+        token,
+        message: `${userExist.email} successfully signed in`,
       });
     }
     return res.status(422).json({ error: 'email or pasword incorrect' });
@@ -53,7 +54,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const helloMarusoft = async(req, res) => {
-  res.send('Hello Mr Marusoft');
+const helloMarusoft = async (req, res) => {
+  return res.send('Hello Mr Marusoft');
 };
 export default { createUser, loginUser, helloMarusoft };
