@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable arrow-body-style */
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -42,6 +42,7 @@ const loginUser = async (req, res) => {
     const comparePassword = await bcrypt.compare(password, userExist.password);
     if (comparePassword) {
       // return res.status(200).json({ message: `${userExist.email} successfully signed in` });
+      // eslint-disable-next-line no-underscore-dangle
       const token = jwt.sign({ _id: userExist._id }, config.jwt_secret);
       return res.status(200).json({
         token,
