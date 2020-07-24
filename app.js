@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import express from 'express';
 import logger from 'morgan';
 import mongoose from 'mongoose';
