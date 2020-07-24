@@ -2,9 +2,12 @@
 import express from 'express';
 import logger from 'morgan';
 import mongoose from 'mongoose';
-import mongoUri from './config';
+import config from './config';
 import './models/user.models';
+import './models/post.models';
+
 import userRouter from './routes/user.routes';
+import postRouter from './routes/post.routes';
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -15,9 +18,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/v1', userRouter);
+app.use('/api/v1', postRouter);
 
 mongoose.Promise = Promise;
-mongoose.connect(mongoUri, {
+mongoose.connect(config.mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
