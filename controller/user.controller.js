@@ -55,7 +55,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-const helloMarusoft = async (req, res) => {
-  return res.send('Hello Mr Marusoft');
-};
-export default { createUser, loginUser, helloMarusoft };
+// const helloMarusoft = async (req, res) => {
+//   return res.send('Hello Mr Marusoft');
+// };
+export default { createUser, loginUser };

@@ -17,7 +17,7 @@ const verifyUserToken = async (req, res, next) => {
     const { _id } = payload;
     const userData = await User.findById(_id);
     req.user = userData;
+    next();
   });
-  next();
 };
 export default verifyUserToken;
