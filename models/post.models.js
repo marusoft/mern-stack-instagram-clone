@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const objectId = mongoose.Schema.Types;
+const { ObjectId } = mongoose.Schema.Types;
 
 const postSchema = new mongoose.Schema({
   title: {
@@ -16,7 +16,7 @@ const postSchema = new mongoose.Schema({
     default: 'no photo',
   },
   postedBy: {
-    type: objectId,
+    type: ObjectId,
     ref: 'User',
   },
 });
