@@ -37,7 +37,6 @@ const userPost = async (req, res) => {
   try {
     const myPosts = await Post.find({ postedBy: req.user._id })
       .populate('postedBy', '_id name');
-    console.log('myPosts', myPosts);
     return res.status(200).json({
       myPosts,
     });
