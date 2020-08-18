@@ -17,8 +17,8 @@ margin-top: 30px;
 }
 
 .input-field input[type=text]:focus {
-  border-bottom: 1px solid rgb(54, 85, 148) !important;
-  box-shadow: 0 1px 0 0 rgb(57, 90, 155) !important;
+  border-bottom: 1px solid rgb(5, 133, 238) !important;
+  box-shadow: 0 1px 0 0 rgb(5, 136, 243) !important;
 }
 
 .gallery{
