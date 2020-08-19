@@ -1,25 +1,48 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import M from "materialize-css";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const history = useHistory();
 
   const createUser = async () => {
-    const newUser = await fetch("/api/v1/signup", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: "",
-        password: "",
-        email: "",
-      }),
-    });
-    const data = newUser.json();
-    console.log("data", data);
+    if (
+      !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+        email
+      )
+    ) {
+      M.toast({
+        html: "invalid email format",
+        classes: "#b71c1c red darken-4",
+      });
+      return;
+    }
+    try {
+      const newUser = await fetch("/api/v1/signup", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          password,
+          email,
+        }),
+      });
+      const data = await newUser.json();
+      if (data.error) {
+        M.toast({ html: data.error, classes: "#b71c1c red darken-4" });
+      } else {
+        M.toast({ html: data.message, classes: "#43a047 green darken-1" });
+        history.push("/signin");
+      }
+      console.log("data", data);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
