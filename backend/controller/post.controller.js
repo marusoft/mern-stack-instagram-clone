@@ -4,12 +4,13 @@ import mongoose from 'mongoose';
 const Post = mongoose.model('Post');
 
 const createPost = async (req, res) => {
-  const { title, body } = req.body;
+  const { title, body, pic } = req.body;
   req.user.password = undefined;
   try {
     const post = new Post({
       title,
       body,
+      photo: pic,
       postedBy: req.user,
     });
     const savePost = await post.save();
