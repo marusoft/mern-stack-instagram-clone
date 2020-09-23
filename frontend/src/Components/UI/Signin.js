@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { UserContext } from "../../App";
 import M from "materialize-css";
 
 const Signin = () => {
+  const { state, dispatch } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
@@ -31,12 +33,13 @@ const Signin = () => {
         }),
       });
       const data = await userSigninData.json();
-      console.log('info',data)
+      console.log("info", data);
       if (data.error) {
         M.toast({ html: data.error, classes: "#b71c1c red darken-4" });
       } else {
-        localStorage.setItem('jwt', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem("jwt", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        dispatch({type:'USER', payload:data.user})
         M.toast({ html: data.message, classes: "#43a047 green darken-1" });
         history.push("/");
       }
