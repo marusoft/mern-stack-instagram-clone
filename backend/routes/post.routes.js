@@ -9,7 +9,7 @@ const { createPost, getAllPost, userPost } = postController;
 
 const postRoute = express.Router();
 
-postRoute.get('/posts', getAllPost);
+postRoute.get('/posts', verifyUser, getAllPost);
 postRoute.post('/createpost', postValidation, verifyUser, createPost);
 postRoute.get('/userpost', verifyUser, userPost);
 
