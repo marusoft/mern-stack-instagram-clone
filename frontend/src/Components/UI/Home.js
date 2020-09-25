@@ -11,7 +11,6 @@ const Home = () => {
         },
       });
       const postResult = await getUserPostToDisplay.json();
-      // console.log(postResult.allPosts);
       setData(postResult.allPosts)
     } catch (error) {
       console.log(error);
@@ -30,7 +29,7 @@ const Home = () => {
             <div className="card-image">
               <img
                 src={item.photo}
-                alt=""
+                alt="item post"
               />
             </div>
             <div className="card-content">
