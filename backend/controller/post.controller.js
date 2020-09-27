@@ -46,4 +46,32 @@ const userPost = async (req, res) => {
   }
 };
 
-export default { createPost, getAllPost, userPost };
+const likePost = async (req, res) => {
+  try {
+    const like = await Post.findByIdAndUpdate(req.body.postId, {
+      $push: { likes: req.user._id },
+    }, {
+      new: true,
+    }).exec();
+    return res.status(200).json(like);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const unLikePost = async (req, res) => {
+  try {
+    const unlike = await Post.findByIdAndUpdate(req.body.postId, {
+      $pull: { likes: req.user._id },
+    }, {
+      new: true,
+    }).exec();
+    return res.status(200).json(unlike);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default {
+  createPost, getAllPost, userPost, likePost, unLikePost,
+};
