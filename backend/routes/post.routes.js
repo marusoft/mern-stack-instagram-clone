@@ -6,7 +6,7 @@ import postValidation from '../middlewares/post.validate';
 import postController from '../controller/post.controller';
 
 const {
-  createPost, getAllPost, userPost, likePost, unLikePost,
+  createPost, getAllPost, userPost, likePost, unLikePost, commentPost,
 } = postController;
 
 const postRoute = express.Router();
@@ -16,5 +16,6 @@ postRoute.post('/createpost', postValidation, verifyUser, createPost);
 postRoute.get('/userpost', verifyUser, userPost);
 postRoute.put('/likepost', verifyUser, likePost);
 postRoute.put('/unlikepost', verifyUser, unLikePost);
+postRoute.put('/commentpost', verifyUser, commentPost);
 
 export default postRoute;

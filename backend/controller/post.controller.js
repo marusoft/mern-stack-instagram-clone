@@ -25,7 +25,9 @@ const createPost = async (req, res) => {
 
 const getAllPost = async (req, res) => {
   try {
-    const allPosts = await Post.find().populate('postedBy', '_id name');
+    const allPosts = await Post.find()
+      .populate('postedBy', '_id name')
+      .populate('comments.postedBy', '_id name');
     return res.status(200).json({
       allPosts,
     });
@@ -72,6 +74,26 @@ const unLikePost = async (req, res) => {
   }
 };
 
+const commentPost = async (req, res) => {
+  const comment = {
+    text: req.body.text,
+    postedBy: req.user._id,
+  };
+  try {
+    const userComment = await Post.findByIdAndUpdate(req.body.postId, {
+      $push: { comments: comment },
+    }, {
+      new: true,
+    })
+      .populate('comments.postedBy', '_id name')
+      .populate('postedBy', '_id name')
+      .exec();
+    return res.status(200).json(userComment);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default {
-  createPost, getAllPost, userPost, likePost, unLikePost,
+  createPost, getAllPost, userPost, likePost, unLikePost, commentPost,
 };
