@@ -108,13 +108,41 @@ const Home = () => {
     }
   };
 
+  const deleteUserPost = async (postId) => {
+    try {
+      const deletePost = await fetch(`/api/v1/deletepost/${postId}`, {
+        method: "delete",
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("jwt"),
+        },
+      });
+      const deletePostResult = await deletePost.json();
+      console.log(deletePostResult);
+      const deletePostData = data.filter((item) => {
+        return (item._id !== deletePostResult._id) 
+      });
+      setData(deletePostData);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   // render
   return (
     <div className="home">
       {data.map((item) => {
         return (
           <div className="card home-card" key={item._id}>
-            <h5>{item.postedBy.name}</h5>
+            <h5>
+              {item.postedBy.name}{" "}
+              {item.postedBy._id == state._id && (
+                <i className="material-icons" style={{ float: "right" }}
+                onClick={()=> deleteUserPost(item._id)}
+                > 
+              delete
+                </i>
+              )}
+            </h5>
             <div className="card-image">
               <img src={item.photo} alt="item post" />
             </div>
@@ -147,7 +175,12 @@ const Home = () => {
               <p>{item.body}</p>
               {item.comments.map((userComment) => {
                 return (
-                  <h6 key={userComment._id}><span style={{ fontWeight: "500" }}>{userComment.postedBy.name}</span> {userComment.text}</h6>
+                  <h6 key={userComment._id}>
+                    <span style={{ fontWeight: "500" }}>
+                      {userComment.postedBy.name}
+                    </span>{" "}
+                    {userComment.text}
+                  </h6>
                 );
               })}
               <form
