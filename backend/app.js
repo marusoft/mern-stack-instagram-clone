@@ -2,6 +2,7 @@ import express from 'express';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import config from './config';
+import 'colors';
 import './models/user.models';
 import './models/post.models';
 
@@ -26,15 +27,11 @@ mongoose.connect(config.mongoUri, {
 });
 
 mongoose.connection.on('connected', () => {
-  console.log('Successfully connected to the database');
+  console.log('Successfully connected to the database'.yellow.bold);
 });
 
 mongoose.connection.on('Error', (err) => {
   console.log('Unable to established database connection', err);
 });
 
-app.get('/', (req, res) => res.status(200).json({
-  message: 'Hello Marusoft',
-}));
-
-app.listen(port, () => console.log(`Server running on port ${port} 🔥`));
+app.listen(port, () => console.log(`Server running on port ${port} 🔥`.cyan.bold));

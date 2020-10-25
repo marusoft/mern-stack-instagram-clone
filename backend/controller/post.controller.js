@@ -94,6 +94,29 @@ const commentPost = async (req, res) => {
   }
 };
 
+const deletePost = async (req, res) => {
+  try {
+    const postDelete = await Post.findOne({ _id: req.params.postId })
+      .populate('postedBy, "_id')
+      .exec(async (err, post) => {
+        if (err || !post) {
+          return res.status(422).json({
+            error: err,
+          });
+        }
+        if (post.postedBy._id.toString() === req.user._id.toString()) {
+          await post.remove();
+          return res.status(200).json({
+            postDelete,
+            message: 'Post Successfully deleted',
+          });
+        }
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export default {
-  createPost, getAllPost, userPost, likePost, unLikePost, commentPost,
+  createPost, getAllPost, userPost, likePost, unLikePost, commentPost, deletePost,
 };
