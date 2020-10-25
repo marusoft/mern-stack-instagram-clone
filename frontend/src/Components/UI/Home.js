@@ -67,16 +67,63 @@ const Home = () => {
         }),
       });
       const unLikePostResult = await unLikeUserPost.json();
-      const updateLikeData = data.map((item) => {
+      const updateUnLikeData = data.map((item) => {
         if (item._id === unLikePostResult._id) {
           return unLikePostResult;
         } else {
           return item;
         }
       });
-      setData(updateLikeData);
+      setData(updateUnLikeData);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  //make post comment
+  const createPostComment = async (text, id) => {
+    try {
+      const postComment = await fetch("/api/v1/commentpost", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("jwt"),
+        },
+        body: JSON.stringify({
+          text,
+          postId: id,
+        }),
+      });
+      const commentPostResult = await postComment.json();
+      const updateCommentData = data.map((item) => {
+        if (item._id === commentPostResult._id) {
+          return commentPostResult;
+        } else {
+          return item;
+        }
+      });
+      setData(updateCommentData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteUserPost = async (postId) => {
+    try {
+      const deletePost = await fetch(`/api/v1/deletepost/${postId}`, {
+        method: "delete",
+        headers: {
+          "Authorization": "Bearer " + localStorage.getItem("jwt"),
+        },
+      });
+      const deletePostResult = await deletePost.json();
+      console.log(deletePostResult);
+      const deletePostData = data.filter((item) => {
+        return (item._id !== deletePostResult._id) 
+      });
+      setData(deletePostData);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -86,7 +133,16 @@ const Home = () => {
       {data.map((item) => {
         return (
           <div className="card home-card" key={item._id}>
-            <h5>{item.postedBy.name}</h5>
+            <h5>
+              {item.postedBy.name}{" "}
+              {item.postedBy._id == state._id && (
+                <i className="material-icons" style={{ float: "right" }}
+                onClick={()=> deleteUserPost(item._id)}
+                > 
+              delete
+                </i>
+              )}
+            </h5>
             <div className="card-image">
               <img src={item.photo} alt="item post" />
             </div>
@@ -117,7 +173,24 @@ const Home = () => {
               <h6>{item.likes.length} likes</h6>
               <h6>{item.title}</h6>
               <p>{item.body}</p>
-              <input type="text" placeholder="add a comment" />
+              {item.comments.map((userComment) => {
+                return (
+                  <h6 key={userComment._id}>
+                    <span style={{ fontWeight: "500" }}>
+                      {userComment.postedBy.name}
+                    </span>{" "}
+                    {userComment.text}
+                  </h6>
+                );
+              })}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  createPostComment(e.target[0].value, item._id);
+                }}
+              >
+                <input type="text" placeholder="add a comment" />
+              </form>
             </div>
           </div>
         );
