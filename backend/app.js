@@ -11,7 +11,7 @@ import postRouter from './routes/post.routes';
 import profileRouter from './routes/user.profile.routes';
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 app.use(logger('dev'));
 
