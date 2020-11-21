@@ -4,9 +4,10 @@ import { useParams } from "react-router-dom";
 
 const Profile = () => {
   const [userProfile, setProfile] = useState(null);
+  const [showFollow, setShowFollow] = useState(true);
   const { state, dispatch } = useContext(UserContext);
   const { userid } = useParams();
-  console.log(userid);
+  // console.log(userid);
 
   const displayUserProfile = async () => {
     try {
@@ -28,6 +29,89 @@ const Profile = () => {
   useEffect(() => {
     displayUserProfile();
   }, []);
+
+  // follower logic
+  const displayUserFollower = async () => {
+    try {
+      const followUser = await fetch("/api/v1/follow", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("jwt"),
+        },
+        body: JSON.stringify({
+          followId: userid,
+        }),
+      });
+      const userFollowerResult = await followUser.json();
+      console.log(userFollowerResult);
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          following: userFollowerResult.following,
+          followers: userFollowerResult.followers,
+        },
+      });
+      localStorage.setItem("user", JSON.stringify(userFollowerResult));
+      setProfile((prevState) => {
+        return {
+          ...prevState,
+          findUser: {
+            ...prevState.findUser,
+            followers: [
+              ...prevState.findUser.followers,
+              userFollowerResult._id,
+            ],
+          },
+        };
+      });
+      setShowFollow(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // unfollow logic
+
+  const displayUserUnFollower = async () => {
+    try {
+      const unFollowUser = await fetch("/api/v1/unfollow", {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("jwt"),
+        },
+        body: JSON.stringify({
+          unfollowId: userid,
+        }),
+      });
+      const userUnFollowerResult = await unFollowUser.json();
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          following: userUnFollowerResult.following,
+          followers: userUnFollowerResult.followers,
+        },
+      });
+      localStorage.setItem("user", JSON.stringify(userUnFollowerResult));
+      setProfile((prevState) => {
+        const newFollower = prevState.findUser.followers.filter(
+          (item) => item != userUnFollowerResult._id
+        );
+        return {
+          ...prevState,
+          findUser: {
+            ...prevState.findUser,
+            followers: newFollower,
+          },
+        };
+      });
+      setShowFollow(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {userProfile ? (
@@ -67,9 +151,30 @@ const Profile = () => {
                 }}
               >
                 <h6>{userProfile.posts.length} posts</h6>
-                <h6>50 followers</h6>
-                <h6>50 following</h6>
+                <h6>{userProfile.findUser.followers.length} followers</h6>
+                <h6>{userProfile.findUser.following.length} following</h6>
               </div>
+              {showFollow ? (
+                <button
+                  style={{
+                    margin: "10px",
+                  }}
+                  className="btn waves-effect waves-light #64b5f6 blue darken-1"
+                  onClick={() => displayUserFollower()}
+                >
+                  Follow
+                </button>
+              ) : (
+                <button
+                  style={{
+                    margin: "10px",
+                  }}
+                  className="btn waves-effect waves-light #64b5f6 blue darken-1"
+                  onClick={() => displayUserUnFollower()}
+                >
+                  Unfollow
+                </button>
+              )}
             </div>
           </div>
           <div className="gallery">
