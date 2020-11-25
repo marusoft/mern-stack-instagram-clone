@@ -44,3 +44,6 @@ margin-top: 30px;
   right: 20px !important;
   left: auto !important;
 }
+.material-icons:hover{
+  cursor: pointer;
+}

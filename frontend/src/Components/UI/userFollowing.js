@@ -9,7 +9,7 @@ const Home = () => {
   // display
   const displayUserPost = async () => {
     try {
-      const getUserPostToDisplay = await fetch("/api/v1/posts", {
+      const getUserPostToDisplay = await fetch("/api/v1/userfollowingposts", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),
         },
@@ -114,13 +114,13 @@ const Home = () => {
       const deletePost = await fetch(`/api/v1/deletepost/${postId}`, {
         method: "delete",
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwt"),
+          "Authorization": "Bearer " + localStorage.getItem("jwt"),
         },
       });
       const deletePostResult = await deletePost.json();
       console.log(deletePostResult);
       const deletePostData = data.filter((item) => {
-        return item._id !== deletePostResult._id;
+        return (item._id !== deletePostResult._id) 
       });
       setData(deletePostData);
     } catch (e) {
@@ -137,22 +137,13 @@ const Home = () => {
             <h5 style={{
               padding: "5px"
             }}>
-              <Link
-                to={
-                  item.postedBy._id !== state._id
-                    ? "/profile/" + item.postedBy._id
-                    : "/profile/"
-                }
-              >
-                {item.postedBy.name}
-              </Link>{" "}
+            <Link to={item.postedBy._id !== state._id?"/profile/"+item.postedBy._id: "/profile/"}>{item.postedBy.name}</Link>
+            {" "}
               {item.postedBy._id == state._id && (
-                <i
-                  className="material-icons"
-                  style={{ float: "right" }}
-                  onClick={() => deleteUserPost(item._id)}
-                >
-                  delete
+                <i className="material-icons" style={{ float: "right" }}
+                onClick={()=> deleteUserPost(item._id)}
+                > 
+              delete
                 </i>
               )}
             </h5>
