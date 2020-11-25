@@ -36,6 +36,21 @@ const getAllPost = async (req, res) => {
   }
 };
 
+const getUserFollowingPost = async (req, res) => {
+  try {
+    const allPosts = await Post.find({
+      postedBy: { $in: req.user.following },
+    })
+      .populate('postedBy', '_id name')
+      .populate('comments.postedBy', '_id name');
+    return res.status(200).json({
+      allPosts,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const userPost = async (req, res) => {
   try {
     const myPosts = await Post.find({ postedBy: req.user._id })
@@ -118,5 +133,12 @@ const deletePost = async (req, res) => {
 };
 
 export default {
-  createPost, getAllPost, userPost, likePost, unLikePost, commentPost, deletePost,
+  createPost,
+  getAllPost,
+  userPost,
+  likePost,
+  unLikePost,
+  commentPost,
+  deletePost,
+  getUserFollowingPost,
 };

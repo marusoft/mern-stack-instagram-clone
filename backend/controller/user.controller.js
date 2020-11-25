@@ -43,13 +43,17 @@ const loginUser = async (req, res) => {
     if (comparePassword) {
       const token = jwt.sign({ _id: userExist._id }, config.jwt_secret);
 
-      const { _id, name } = userExist;
+      const {
+        _id, name, followers, following,
+      } = userExist;
       return res.status(200).json({
         token,
         user: {
           _id,
           name,
           email,
+          followers,
+          following,
         },
         message: `${userExist.email} successfully signed in`,
       });
