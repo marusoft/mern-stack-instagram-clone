@@ -4,10 +4,12 @@ import { useParams } from "react-router-dom";
 
 const Profile = () => {
   const [userProfile, setProfile] = useState(null);
-  const [showFollow, setShowFollow] = useState(state?!state.following.includes(userid):true);
+  
   const { state, dispatch } = useContext(UserContext);
   const { userid } = useParams();
   // console.log(userid);
+
+  const [showFollow, setShowFollow] = useState(state?!state.following.includes(userid):true);
 
   const displayUserProfile = async () => {
     try {
@@ -136,7 +138,7 @@ const Profile = () => {
                   height: "160px",
                   borderRadius: "80px",
                 }}
-                src="https://images.unsplash.com/photo-1550927407-50e2bd128b81?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
+                src={userProfile.findUser.photo}
                 alt=""
               />
             </div>

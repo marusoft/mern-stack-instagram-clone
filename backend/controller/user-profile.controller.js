@@ -71,4 +71,23 @@ const unFollow = async (req, res) => {
   }
 };
 
-export default { userProfile, follow, unFollow };
+const updatePhoto = async (req, res) => {
+  try {
+    const updateUserPhoto = await User.findByIdAndUpdate(req.user._id,
+      { $set: { photo: req.body.photo } }, { new: true },
+      async (err, result) => {
+        console.log(result);
+        if (err) {
+          return res.status(422).json({ error: 'Unable to update photo' });
+        }
+        return res.json(result);
+      });
+    // console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export default {
+  userProfile, follow, unFollow, updatePhoto,
+};
