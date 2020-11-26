@@ -7,7 +7,9 @@ import config from '../config';
 const User = mongoose.model('User');
 
 const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const {
+    name, email, password, photo,
+  } = req.body;
   try {
     const savedUser = await User.findOne({ email });
     if (savedUser) {
@@ -20,6 +22,7 @@ const createUser = async (req, res) => {
       name,
       email,
       password: hashpassword,
+      photo,
     });
     await user.save();
     return res
@@ -44,7 +47,7 @@ const loginUser = async (req, res) => {
       const token = jwt.sign({ _id: userExist._id }, config.jwt_secret);
 
       const {
-        _id, name, followers, following,
+        _id, name, followers, following, photo,
       } = userExist;
       return res.status(200).json({
         token,
@@ -54,6 +57,7 @@ const loginUser = async (req, res) => {
           email,
           followers,
           following,
+          photo,
         },
         message: `${userExist.email} successfully signed in`,
       });
